@@ -12,25 +12,24 @@ export const authenticateToken = (
     const token = authHeader?.split(" ")[1];
 
     if (!token) {
-
         return res.status(401).json({
             message: "Token manquant"
         });
     }
 
-    jwt.verify(
-        token,
-        process.env.JWT_SECRET!,
-        (err) => {
+    try {
 
-            if (err) {
+        jwt.verify(
+            token,
+            process.env.JWT_SECRET!
+        );
 
-                return res.status(403).json({
-                    message: "Token invalide"
-                });
-            }
+        next();
 
-            next();
-        }
-    );
+    } catch {
+
+        return res.status(403).json({
+            message: "Token invalide"
+        });
+    }
 };

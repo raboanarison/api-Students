@@ -3,7 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 import { StudentController } from "./controllers/studentController.js";
-
+import { AuthController } from "./controllers/AuthController.js";
+import { authenticateToken } from "./middleware/authMiddleware.js";
 dotenv.config();
 
 const app = express();
@@ -12,8 +13,16 @@ app.use(cors());
 app.use(express.json());
 
 const studentController = new StudentController();
+const authController = new AuthController();
 
-app.get("/students", studentController.getAll);
+app.post("/register", authController.register);
+app.post("/login", authController.login);
+
+app.get(
+    "/students",
+    authenticateToken,
+    studentController.getAll
+);
 app.get("/students/:id", studentController.getById);
 app.post("/students", studentController.create);
 app.put("/students/:id", studentController.update);
