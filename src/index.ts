@@ -1,17 +1,31 @@
 import express from "express";
-import { StudentController } from "./controllers/studentController.js";
+import dotenv from "dotenv";
+
+import { AuthController } from "./controllers/AuthController.js";
+import { authenticateToken } from "./middleware/authMiddleware.js";
+
+dotenv.config();
 
 const app = express();
 
 app.use(express.json());
 
-const studentController = new StudentController();
+const authController = new AuthController();
 
-app.get("/students", studentController.getAll);
-app.get("/students/:id", studentController.getById);
-app.post("/students", studentController.create);
-app.put("/students/:id", studentController.update);
-app.delete("/students/:id", studentController.delete);
+app.post("/register", authController.register);
+
+app.post("/login", authController.login);
+
+app.get(
+    "/students",
+    authenticateToken,
+    (req, res) => {
+
+        res.json({
+            message: "Route protégée"
+        });
+    }
+);
 
 app.listen(3000, () => {
     console.log("Server running on port 3000");
