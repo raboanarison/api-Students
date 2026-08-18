@@ -7,9 +7,12 @@ export class AuthService {
 
     private repo = new UserRepository();
 
-    async register(username: string, password: string) {
-
-        const hashedPassword = await bcrypt.hash(password, 10);
+    async register(
+        username: string,
+        password: string
+    ) {
+        const hashedPassword =
+            await bcrypt.hash(password, 10);
 
         return this.repo.create({
             username,
@@ -17,18 +20,22 @@ export class AuthService {
         });
     }
 
-    async login(username: string, password: string) {
-
-        const user = await this.repo.findByUsername(username);
+    async login(
+        username: string,
+        password: string
+    ) {
+        const user =
+            await this.repo.findByUsername(username);
 
         if (!user) {
             throw new Error("Utilisateur introuvable");
         }
 
-        const valid = await bcrypt.compare(
-            password,
-            user.password
-        );
+        const valid =
+            await bcrypt.compare(
+                password,
+                user.password
+            );
 
         if (!valid) {
             throw new Error("Mot de passe incorrect");

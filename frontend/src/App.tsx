@@ -1,12 +1,34 @@
 import { useEffect, useState } from "react";
 
+interface Student {
+  id: number;
+  nom: string;
+  age: number;
+}
+
 function App() {
-  const [students, setStudents] = useState<any[]>([]);
+  const [students, setStudents] = useState<Student[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/students")
+    fetch("http://localhost:3000/students", {
+      headers: {
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJhbWluIiwiaWF0IjoxNzg3MDUxMzIzLCJleHAiOjE3ODcwNTQ5MjN9.wWCLzOREJWArStCzoDB2SEZ3ybjI8qIaSqrSqhbzsMo"
+      }
+    })
       .then((res) => res.json())
-      .then((data) => setStudents(data));
+      .then((data) => {
+        console.log(data);
+
+        if (Array.isArray(data)) {
+          setStudents(data);
+        } else {
+          console.error("Erreur API :", data);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }, []);
 
   return (

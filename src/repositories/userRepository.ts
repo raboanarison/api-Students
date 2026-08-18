@@ -1,10 +1,9 @@
 import { pool } from "../configuration/db.js";
-import { User } from "../models/user.js";
+import { User } from "../models/User.js";
 
 export class UserRepository {
 
     async create(user: User) {
-
         const result = await pool.query(
             "INSERT INTO users(username,password) VALUES($1,$2) RETURNING *",
             [user.username, user.password]
@@ -14,7 +13,6 @@ export class UserRepository {
     }
 
     async findByUsername(username: string) {
-
         const result = await pool.query(
             "SELECT * FROM users WHERE username=$1",
             [username]
